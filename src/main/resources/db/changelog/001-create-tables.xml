@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.8.xsd">
+
+    <changeSet id="1" author="vladislav">
+        <createTable tableName="contacts">
+            <column name="id" type="UUID" defaultValueComputed="random_uuid()">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(256)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="phone" type="VARCHAR(18)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2" author="vladislav">
+        <createTable tableName="hotel">
+            <column name="id" type="UUID" defaultValueComputed="random_uuid()">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(500)"/>
+            <column name="brand" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="house_number" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="street" type="VARCHAR(85)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="city" type="VARCHAR(163)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="country" type="VARCHAR(56)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="post_code" type="VARCHAR(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="contact_id" type="UUID">
+                <constraints foreignKeyName="fk_hotel_contacts" referencedTableName="contacts"
+                             referencedColumnNames="id" nullable="false"/>
+            </column>
+            <column name="check_in" type="TIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="check_out" type="TIME">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="3" author="vladislav">
+        <createTable tableName="amenities">
+            <column name="id" type="UUID" defaultValueComputed="random_uuid()">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="4" author="vladislav">
+        <createTable tableName="hotel_amenities">
+            <column name="id" type="UUID" defaultValueComputed="random_uuid()">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="hotel_id" type="UUID">
+                <constraints nullable="false" foreignKeyName="fk_hotel_amenities_hotels" referencedTableName="hotel"
+                             referencedColumnNames="id"/>
+            </column>
+            <column name="amenity_id" type="UUID">
+                <constraints nullable="false" foreignKeyName="fk_hotel_amenities_amenities"
+                             referencedTableName="amenities" referencedColumnNames="id"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
