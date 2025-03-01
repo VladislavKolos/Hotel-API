@@ -24,5 +24,9 @@ public interface HotelAmenityRepository extends JpaRepository<HotelAmenity, UUID
                 SELECT DISTINCT ha.hotel FROM HotelAmenity ha
                 WHERE LOWER(ha.amenity.name) LIKE LOWER(CONCAT('%', :amenity, '%'))
             """)
-    Page<Hotel> findHotelsByAmenity(@Param("amenity") String amenity, Pageable pageable);
+    Page<Hotel> findHotelsByAmenityFilter(@Param("amenity") String amenity, Pageable pageable);
+
+    @EntityGraph(attributePaths = {"hotel", "amenity"})
+    @Query("SELECT ha FROM HotelAmenity ha")
+    List<HotelAmenity> findAllHotelAmenities();
 }
