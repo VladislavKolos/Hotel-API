@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
@@ -16,9 +17,12 @@ import java.util.UUID;
 @Repository
 public interface HotelRepository extends JpaRepository<Hotel, UUID>, JpaSpecificationExecutor<Hotel> {
 
+    @Query("SELECT DISTINCT h FROM Hotel h")
     @EntityGraph(attributePaths = {"contact"})
     Page<Hotel> findAllHotelsWithContactPageable(Pageable pageable);
 
+    @NonNull
+    @Override
     @EntityGraph(attributePaths = {"contact"})
-    Page<Hotel> findAllWithSpecification(Specification<Hotel> spec, Pageable pageable);
+    Page<Hotel> findAll(@NonNull Specification<Hotel> spec, @NonNull Pageable pageable);
 }
