@@ -17,12 +17,12 @@ import java.util.UUID;
 public interface HotelAmenityRepository extends JpaRepository<HotelAmenity, UUID> {
 
     @Query("SELECT DISTINCT ha FROM HotelAmenity ha WHERE ha.hotel.id = :hotelId")
-    List<HotelAmenity> findHotelAmenitiesByHotelId(@Param("hotelId") UUID hotelId);
+    List<HotelAmenity> findHotelsAmenitiesByHotelId(@Param("hotelId") UUID hotelId);
 
     @EntityGraph(attributePaths = {"hotel", "amenity"})
     @Query("""
                 SELECT DISTINCT ha.hotel FROM HotelAmenity ha
                 WHERE LOWER(ha.amenity.name) LIKE LOWER(CONCAT('%', :amenity, '%'))
             """)
-    Page<Hotel> findHotelsByAmenityFilter(@Param("amenity") String amenity, Pageable pageable);
+    Page<Hotel> findHotelsByAmenity(@Param("amenity") String amenity, Pageable pageable);
 }
