@@ -6,8 +6,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.api.hotel.dto.response.FullHotelInfoResponseDto;
 import org.example.api.hotel.service.HotelAmenityService;
-import org.example.api.hotel.service.UriService;
-import org.example.api.hotel.service.enums.UriType;
+import org.example.api.hotel.util.uri.UriUtil;
+import org.example.api.hotel.util.uri.enums.UriType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,9 +24,7 @@ import java.util.UUID;
 @RequestMapping("/hotels")
 @RequiredArgsConstructor
 public class HotelAmenityController {
-    private final UriService uriService;
     private final HotelAmenityService hotelAmenityService;
-
 
     @PostMapping("/{id}/amenities")
     public ResponseEntity<FullHotelInfoResponseDto> addAmenitiesToHotel(@PathVariable UUID id,
@@ -36,7 +34,7 @@ public class HotelAmenityController {
         var response = hotelAmenityService.addAmenitiesToHotel(id, request);
         log.info("Amenities added to hotel with ID: {} successfully", response.id());
 
-        String resourceUri = uriService.createUri(UriType.HOTEL_AMENITY, response.id());
+        String resourceUri = UriUtil.createUri(UriType.HOTEL_AMENITY, response.id());
         log.info("Hotel with amenities resource URI created: {}", resourceUri);
 
         return ResponseEntity.created(URI.create(resourceUri))

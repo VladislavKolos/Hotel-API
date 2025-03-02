@@ -16,9 +16,6 @@ import java.util.UUID;
 @Repository
 public interface HotelAmenityRepository extends JpaRepository<HotelAmenity, UUID> {
 
-    @Query("SELECT DISTINCT ha FROM HotelAmenity ha WHERE ha.hotel.id = :hotelId")
-    List<HotelAmenity> findHotelsAmenitiesByHotelId(@Param("hotelId") UUID hotelId);
-
     @EntityGraph(attributePaths = {"hotel", "amenity"})
     @Query("""
                 SELECT DISTINCT ha.hotel FROM HotelAmenity ha

@@ -15,8 +15,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -32,28 +34,45 @@ public class HotelAmenityServiceImpl implements HotelAmenityService {
         var hotel = hotelRepository.findById(hotelId)
                 .orElseThrow(() -> new EntityNotFoundException("")); //TODO Later I will create custom exceptions
 
-        List<Amenity> amenities = createAmenities(request);
+        List<Amenity> amenities = findOrCreateAmenities(request);
 
         linkAmenitiesToHotel(hotel, amenities);
 
         return hotelMapper.toFullHotelInfoResponseDto(hotel);
     }
 
-    private List<Amenity> createAmenities(List<String> amenityNames) {
-        List<Amenity> amenities = amenityNames.stream()
+    private List<Amenity> findOrCreateAmenities(List<String> amenityNames) {
+        List<Amenity> existingAmenities = amenityRepository.findByNameIn(amenityNames);
+
+        Set<String> existingNames = existingAmenities.stream()
+                .map(Amenity::getName)
+                .collect(Collectors.toSet());
+
+        List<Amenity> newAmenities = amenityNames.stream()
+                .filter(name -> !existingNames.contains(name))
                 .map(name -> Amenity.builder().name(name).build())
                 .collect(Collectors.toList());
 
-        return amenityRepository.saveAll(amenities);
+        return newAmenities.isEmpty() ?
+                existingAmenities
+                :
+                Stream.concat(existingAmenities.stream(), amenityRepository.saveAll(newAmenities).stream())
+                        .toList();
     }
 
     private void linkAmenitiesToHotel(Hotel hotel, List<Amenity> amenities) {
-        List<HotelAmenity> hotelAmenities = amenities.stream()
+        Set<String> existingAmenityNames = hotel.getHotelAmenities().stream()
+                .map(ha -> ha.getAmenity().getName())
+                .collect(Collectors.toSet());
+
+        List<HotelAmenity> newHotelAmenities = amenities.stream()
+                .filter(amenity -> !existingAmenityNames.contains(amenity.getName()))
                 .map(amenity -> HotelAmenity.builder().hotel(hotel).amenity(amenity).build())
                 .collect(Collectors.toList());
 
-        hotelAmenityRepository.saveAll(hotelAmenities);
-
-        hotel.getHotelAmenities().addAll(hotelAmenities);
+        if (!newHotelAmenities.isEmpty()) {
+            hotelAmenityRepository.saveAll(newHotelAmenities);
+            hotel.getHotelAmenities().addAll(newHotelAmenities);
+        }
     }
 }

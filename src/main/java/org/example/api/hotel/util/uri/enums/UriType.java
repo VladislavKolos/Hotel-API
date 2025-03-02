@@ -1,4 +1,4 @@
-package org.example.api.hotel.service.enums;
+package org.example.api.hotel.util.uri.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
