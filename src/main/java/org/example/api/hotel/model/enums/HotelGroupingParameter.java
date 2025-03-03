@@ -2,6 +2,7 @@ package org.example.api.hotel.model.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.example.api.hotel.exception.InvalidGroupingParameterException;
 
 import java.util.Arrays;
 
@@ -19,7 +20,6 @@ public enum HotelGroupingParameter {
         return Arrays.stream(values())
                 .filter(e -> e.value.equalsIgnoreCase(param))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "Unsupported grouping parameter: " + param)); //TODO Later I will create custom exceptions
+                .orElseThrow(() -> new InvalidGroupingParameterException(param));
     }
 }

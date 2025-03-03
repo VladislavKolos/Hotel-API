@@ -1,5 +1,6 @@
 package org.example.api.hotel.repository;
 
+import org.example.api.hotel.model.Amenity;
 import org.example.api.hotel.model.Hotel;
 import org.example.api.hotel.model.HotelAmenity;
 import org.springframework.data.domain.Page;
@@ -26,4 +27,8 @@ public interface HotelAmenityRepository extends JpaRepository<HotelAmenity, UUID
     @EntityGraph(attributePaths = {"hotel", "amenity"})
     @Query("SELECT ha FROM HotelAmenity ha")
     List<HotelAmenity> findAllHotelAmenities();
+
+    @EntityGraph(attributePaths = {"hotel", "amenity"})
+    @Query("SELECT ha FROM HotelAmenity ha WHERE ha.hotel = :hotel AND ha.amenity IN :amenities")
+    List<HotelAmenity> findByHotelAndAmenityIn(@Param("hotel") Hotel hotel, @Param("amenities") List<Amenity> amenities);
 }

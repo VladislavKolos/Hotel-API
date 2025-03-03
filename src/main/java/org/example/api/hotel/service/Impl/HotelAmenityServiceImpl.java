@@ -1,8 +1,8 @@
 package org.example.api.hotel.service.Impl;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.example.api.hotel.dto.response.FullHotelInfoResponseDto;
+import org.example.api.hotel.exception.EntityHotelNotFoundException;
 import org.example.api.hotel.mapper.HotelMapper;
 import org.example.api.hotel.model.Amenity;
 import org.example.api.hotel.model.Hotel;
@@ -11,11 +11,11 @@ import org.example.api.hotel.repository.AmenityRepository;
 import org.example.api.hotel.repository.HotelAmenityRepository;
 import org.example.api.hotel.repository.HotelRepository;
 import org.example.api.hotel.service.HotelAmenityService;
+import org.example.api.hotel.validator.HotelAmenityValidator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -26,27 +26,28 @@ public class HotelAmenityServiceImpl implements HotelAmenityService {
     private final HotelMapper hotelMapper;
     private final HotelRepository hotelRepository;
     private final AmenityRepository amenityRepository;
+    private final HotelAmenityValidator hotelAmenityValidator;
     private final HotelAmenityRepository hotelAmenityRepository;
 
     @Override
     @Transactional
     public FullHotelInfoResponseDto addAmenitiesToHotel(UUID hotelId, List<String> request) {
         var hotel = hotelRepository.findById(hotelId)
-                .orElseThrow(() -> new EntityNotFoundException("")); //TODO Later I will create custom exceptions
+                .orElseThrow(() -> new EntityHotelNotFoundException("Hotel with ID " + hotelId + " not found"));
 
-        List<Amenity> amenities = findOrCreateAmenities(request);
+        List<String> uniqueAmenityNames = request.stream().distinct().toList();
+        List<Amenity> existingAmenities = hotelAmenityValidator.validateNewAmenitiesForHotel(hotel, uniqueAmenityNames);
+        List<Amenity> amenities = findOrCreateAmenities(uniqueAmenityNames, existingAmenities);
 
         linkAmenitiesToHotel(hotel, amenities);
 
         return hotelMapper.toFullHotelInfoResponseDto(hotel);
     }
 
-    private List<Amenity> findOrCreateAmenities(List<String> amenityNames) {
-        List<Amenity> existingAmenities = amenityRepository.findByNameIn(amenityNames);
-
-        Set<String> existingNames = existingAmenities.stream()
+    private List<Amenity> findOrCreateAmenities(List<String> amenityNames, List<Amenity> existingAmenities) {
+        List<String> existingNames = existingAmenities.stream()
                 .map(Amenity::getName)
-                .collect(Collectors.toSet());
+                .toList();
 
         List<Amenity> newAmenities = amenityNames.stream()
                 .filter(name -> !existingNames.contains(name))
@@ -61,9 +62,9 @@ public class HotelAmenityServiceImpl implements HotelAmenityService {
     }
 
     private void linkAmenitiesToHotel(Hotel hotel, List<Amenity> amenities) {
-        Set<String> existingAmenityNames = hotel.getHotelAmenities().stream()
+        List<String> existingAmenityNames = hotel.getHotelAmenities().stream()
                 .map(ha -> ha.getAmenity().getName())
-                .collect(Collectors.toSet());
+                .toList();
 
         List<HotelAmenity> newHotelAmenities = amenities.stream()
                 .filter(amenity -> !existingAmenityNames.contains(amenity.getName()))

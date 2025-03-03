@@ -11,6 +11,7 @@ import org.example.api.hotel.model.enums.HotelGroupingParameter;
 import org.example.api.hotel.service.HotelService;
 import org.example.api.hotel.util.uri.UriUtil;
 import org.example.api.hotel.util.uri.enums.UriType;
+import org.example.api.hotel.validator.constraint.annotation.ExistingHotel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -68,7 +69,7 @@ public class HotelController {
 
     @GetMapping("/hotels/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public FullHotelInfoResponseDto getHotelById(@PathVariable UUID id) {
+    public FullHotelInfoResponseDto getHotelById(@PathVariable @ExistingHotel UUID id) {
         log.info("Incoming request to retrieve hotel with ID: {}", id);
 
         var response = hotelService.getHotelById(id);

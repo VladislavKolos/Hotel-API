@@ -1,6 +1,7 @@
 package org.example.api.hotel.controller;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +29,7 @@ public class HotelAmenityController {
 
     @PostMapping("/{id}/amenities")
     public ResponseEntity<FullHotelInfoResponseDto> addAmenitiesToHotel(@PathVariable UUID id,
-                                                                        @RequestBody @Size(min = 1) List<@NotBlank String> request) {
+                                                                        @RequestBody @NotNull @Size(min = 1) List<@NotBlank String> request) {
         log.info("Incoming request to add amenities to hotel with details: {}", request);
 
         var response = hotelAmenityService.addAmenitiesToHotel(id, request);

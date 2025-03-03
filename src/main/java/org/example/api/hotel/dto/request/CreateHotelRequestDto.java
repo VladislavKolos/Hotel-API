@@ -7,9 +7,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.api.hotel.validator.constraint.annotation.UniqueContact;
 
 @Data
 @Builder
+@UniqueContact
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateHotelRequestDto {

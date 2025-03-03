@@ -1,12 +1,13 @@
 package org.example.api.hotel.service.Impl;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.example.api.hotel.dto.request.CreateHotelRequestDto;
 import org.example.api.hotel.dto.request.HotelFilterRequestDto;
 import org.example.api.hotel.dto.request.HotelSearchRequestDto;
 import org.example.api.hotel.dto.response.FullHotelInfoResponseDto;
 import org.example.api.hotel.dto.response.ShortHotelInfoResponseDto;
+import org.example.api.hotel.exception.EntityHotelNotFoundException;
+import org.example.api.hotel.exception.EntityHotelSaveException;
 import org.example.api.hotel.mapper.HotelMapper;
 import org.example.api.hotel.model.Hotel;
 import org.example.api.hotel.model.enums.HotelGroupingParameter;
@@ -55,8 +56,7 @@ public class HotelServiceImpl implements HotelService {
                     return hotelRepository.save(hotel);
                 })
                 .map(hotelMapper::toShortHotelInfoResponseDto)
-                .orElseThrow(() -> new IllegalStateException(
-                        "Error saving hotel")); //TODO Later I will create custom exceptions
+                .orElseThrow(() -> new EntityHotelSaveException("Failed to save hotel. Please check the request data."));
     }
 
     @Override
@@ -64,8 +64,7 @@ public class HotelServiceImpl implements HotelService {
     public FullHotelInfoResponseDto getHotelById(UUID id) {
         return hotelRepository.findById(id)
                 .map(hotelMapper::toFullHotelInfoResponseDto)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "Hotel not found")); //TODO Later I will create custom exceptions
+                .orElseThrow(() -> new EntityHotelNotFoundException("Hotel with ID " + id + " not found"));
     }
 
     @Override
