@@ -4,19 +4,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.FieldError;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class ValidationExceptionMessageBuilder {
     public String buildValidationErrorMessage(List<FieldError> fieldErrors) {
-        var errorMessage = new StringBuilder("Validation failed for fields: ");
-        for (FieldError fieldError : fieldErrors) {
-            errorMessage.append(fieldError.getField())
-                    .append(" (")
-                    .append(fieldError.getDefaultMessage())
-                    .append("), ");
-        }
-        errorMessage.setLength(errorMessage.length() - 2);
-
-        return errorMessage.toString();
+        return "Validation failed for fields: " +
+                fieldErrors.stream()
+                        .map(fieldError -> fieldError.getField() + " (" + fieldError.getDefaultMessage() + ")")
+                        .collect(Collectors.joining(", "));
     }
 }

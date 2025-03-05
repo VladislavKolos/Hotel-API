@@ -22,6 +22,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -162,7 +163,7 @@ public class HotelApiExceptionHandler {
                 .message(customMessage)
                 .error(status.getReasonPhrase())
                 .path(path)
-                .timestamp(LocalDateTime.now())
+                .timestamp(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES))
                 .build();
 
         return new ResponseEntity<>(apiException, status);

@@ -56,7 +56,8 @@ public class HotelServiceImpl implements HotelService {
                     return hotelRepository.save(hotel);
                 })
                 .map(hotelMapper::toShortHotelInfoResponseDto)
-                .orElseThrow(() -> new EntityHotelSaveException("Failed to save hotel. Please check the request data."));
+                .orElseThrow(
+                        () -> new EntityHotelSaveException("Failed to save hotel. Please check the request data."));
     }
 
     @Override
@@ -125,8 +126,10 @@ public class HotelServiceImpl implements HotelService {
 
     private List<Hotel> getHotelsByAmenities(List<String> amenities) {
         return amenities.stream()
-                .flatMap(amenity -> hotelAmenityRepository.findHotelsByAmenityFilter(amenity,
-                        Pageable.unpaged()).stream())
+                .flatMap(amenity -> Optional.ofNullable(
+                                hotelAmenityRepository.findHotelsByAmenityFilter(amenity, Pageable.unpaged()))
+                        .orElse(Page.empty())
+                        .stream())
                 .distinct()
                 .toList();
     }
