@@ -18,7 +18,6 @@ import java.util.function.Function;
 public class HotelSpecification {
     public static Specification<Hotel> filterBy(HotelFilterRequestDto filter) {
         return (root, query, criteriaBuilder) -> {
-
             List<Predicate> predicates = new ArrayList<>();
 
             addLikePredicateIfNotNull(predicates, root, criteriaBuilder, filter.getName(),

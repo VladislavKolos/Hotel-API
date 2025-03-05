@@ -1,5 +1,6 @@
 package org.example.api.hotel.repository;
 
+import org.example.api.hotel.model.Amenity;
 import org.example.api.hotel.model.Hotel;
 import org.example.api.hotel.model.HotelAmenity;
 import org.springframework.data.domain.Page;
@@ -16,13 +17,18 @@ import java.util.UUID;
 @Repository
 public interface HotelAmenityRepository extends JpaRepository<HotelAmenity, UUID> {
 
-    @Query("SELECT DISTINCT ha FROM HotelAmenity ha WHERE ha.hotel.id = :hotelId")
-    List<HotelAmenity> findHotelsAmenitiesByHotelId(@Param("hotelId") UUID hotelId);
-
     @EntityGraph(attributePaths = {"hotel", "amenity"})
     @Query("""
                 SELECT DISTINCT ha.hotel FROM HotelAmenity ha
                 WHERE LOWER(ha.amenity.name) LIKE LOWER(CONCAT('%', :amenity, '%'))
             """)
-    Page<Hotel> findHotelsByAmenity(@Param("amenity") String amenity, Pageable pageable);
+    Page<Hotel> findHotelsByAmenityFilter(@Param("amenity") String amenity, Pageable pageable);
+
+    @EntityGraph(attributePaths = {"hotel", "amenity"})
+    @Query("SELECT ha FROM HotelAmenity ha")
+    List<HotelAmenity> findAllHotelAmenities();
+
+    @EntityGraph(attributePaths = {"hotel", "amenity"})
+    @Query("SELECT ha FROM HotelAmenity ha WHERE ha.hotel = :hotel AND ha.amenity IN :amenities")
+    List<HotelAmenity> findByHotelAndAmenityIn(@Param("hotel") Hotel hotel, @Param("amenities") List<Amenity> amenities);
 }

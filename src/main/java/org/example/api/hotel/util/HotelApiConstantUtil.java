@@ -9,4 +9,7 @@ public class HotelApiConstantUtil {
     public static final String BRAND = "brand";
     public static final String ADDRESS = "address";
     public static final String COUNTRY = "country";
+    public static final String BASE_PATH = "/property-view";
+    public static final String HOTEL_PATH = BASE_PATH + "/hotels/{id}";
+    public static final String HOTEL_AMENITY_PATH = BASE_PATH + "/hotels/{id}/amenities";
 }

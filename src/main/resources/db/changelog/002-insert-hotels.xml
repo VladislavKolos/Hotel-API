@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.8.xsd">
+
+    <changeSet id="5" author="vladislav">
+        <insert tableName="contacts">
+            <column name="email" value="doubletreeminsk.info@hilton.com"/>
+            <column name="phone" value="+375 17 309-80-00"/>
+        </insert>
+        <insert tableName="hotel">
+            <column name="name" value="DoubleTree by Hilton Minsk"/>
+            <column name="description"
+                    value="The DoubleTree by Hilton Hotel Minsk offers 193 luxurious rooms in the Belorussian capital and stunning views of Minsk city from the hotel's 20th floor ..."/>
+            <column name="brand" value="Hilton"/>
+            <column name="house_number" value="9"/>
+            <column name="street" value="Pobediteley Avenue"/>
+            <column name="city" value="Minsk"/>
+            <column name="country" value="Belarus"/>
+            <column name="post_code" value="220004"/>
+            <column name="contact_id" valueComputed="(SELECT id FROM contacts WHERE email = 'doubletreeminsk.info@hilton.com')"/>
+            <column name="check_in" value="14:00"/>
+            <column name="check_out" value="12:00"/>
+        </insert>
+
+        <insert tableName="contacts">
+            <column name="email" value="marriotmoscow.info@marriot.com"/>
+            <column name="phone" value="+7 495 937-00-00"/>
+        </insert>
+        <insert tableName="hotel">
+            <column name="name" value="Moscow Marriott Grand Hotel"/>
+            <column name="description"
+                    value="Luxury hotel in the heart of Moscow, offering elegant accommodations and exceptional service."/>
+            <column name="brand" value="Marriott"/>
+            <column name="house_number" value="26"/>
+            <column name="street" value="Tverskaya Street"/>
+            <column name="city" value="Moscow"/>
+            <column name="country" value="Russia"/>
+            <column name="post_code" value="125009"/>
+            <column name="contact_id" valueComputed="(SELECT id FROM contacts WHERE email = 'marriotmoscow.info@marriot.com')"/>
+            <column name="check_in" value="15:00"/>
+            <column name="check_out" value="11:00"/>
+        </insert>
+
+        <insert tableName="contacts">
+            <column name="email" value="ritzparis.info@ritz.com"/>
+            <column name="phone" value="+33 1 43 16 30 30"/>
+        </insert>
+        <insert tableName="hotel">
+            <column name="name" value="Ritz Paris"/>
+            <column name="description"
+                    value="The legendary Ritz Paris, located at Place Vendôme, offers an unforgettable experience in the City of Light."/>
+            <column name="brand" value="Ritz"/>
+            <column name="house_number" value="15"/>
+            <column name="street" value="Place Vendôme"/>
+            <column name="city" value="Paris"/>
+            <column name="country" value="France"/>
+            <column name="post_code" value="75001"/>
+            <column name="contact_id" valueComputed="(SELECT id FROM contacts WHERE email = 'ritzparis.info@ritz.com')"/>
+            <column name="check_in" value="14:30"/>
+            <column name="check_out" value="12:00"/>
+        </insert>
+
+        <insert tableName="contacts">
+            <column name="email" value="plazany.info@plaza.com"/>
+            <column name="phone" value="+1 212-759-3000"/>
+        </insert>
+        <insert tableName="hotel">
+            <column name="name" value="The Plaza New York"/>
+            <column name="description"
+                    value="A world-renowned luxury hotel located at the corner of Fifth Avenue and Central Park South."/>
+            <column name="brand" value="Fairmont"/>
+            <column name="house_number" value="768"/>
+            <column name="street" value="Fifth Avenue"/>
+            <column name="city" value="New York"/>
+            <column name="country" value="USA"/>
+            <column name="post_code" value="10019"/>
+            <column name="contact_id" valueComputed="(SELECT id FROM contacts WHERE email = 'plazany.info@plaza.com')"/>
+            <column name="check_in" value="15:00"/>
+            <column name="check_out" value="11:00"/>
+        </insert>
+
+        <insert tableName="contacts">
+            <column name="email" value="burjalarab.info@jumeirah.com"/>
+            <column name="phone" value="+971 4 301 7777"/>
+        </insert>
+        <insert tableName="hotel">
+            <column name="name" value="Burj Al Arab"/>
+            <column name="description"
+                    value="One of the world's most luxurious hotels, offering unparalleled service and breathtaking architecture."/>
+            <column name="brand" value="Jumeirah"/>
+            <column name="house_number" value="1"/>
+            <column name="street" value="Jumeirah St"/>
+            <column name="city" value="Dubai"/>
+            <column name="country" value="UAE"/>
+            <column name="post_code" value="00000"/>
+            <column name="contact_id" valueComputed="(SELECT id FROM contacts WHERE email = 'burjalarab.info@jumeirah.com')"/>
+            <column name="check_in" value="14:00"/>
+            <column name="check_out" value="12:00"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

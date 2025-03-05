@@ -1,0 +1,15 @@
+services:
+  h2-test:
+    container_name: h2-test
+    image: oscarfonts/h2
+    restart: always
+    ports:
+      - "1521:1521"
+    environment:
+      H2_OPTIONS: -ifNotExists
+    volumes:
+      - ./data:/opt/h2-data
+    env_file:
+      - .env
+    profiles:
+      - test

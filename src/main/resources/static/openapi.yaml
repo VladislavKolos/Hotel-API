@@ -1,0 +1,261 @@
+openapi: 3.0.3
+info:
+  title: Hotel Management API
+  description: API for managing hotels, amenities, and search operations
+  version: 1.0.0
+servers:
+  - url: http://localhost:8092/property-view
+    description: Local development server
+
+paths:
+  /hotels:
+    get:
+      summary: Get all hotels with short information
+      description: Retrieves a paginated list of hotels with short information.
+      tags:
+        - Hotels
+      parameters:
+        - name: pageable
+          in: query
+          required: false
+          description: Pagination and sorting information
+          schema:
+            type: string
+          example: "{ \"page\": 0, \"size\": 10, \"sort\": \"name,asc\" }"
+      responses:
+        "200":
+          description: Hotels retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ShortHotelInfoResponseDto'
+
+    post:
+      summary: Create a new hotel
+      description: Creates a new hotel with the provided details.
+      tags:
+        - Hotels
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateHotelRequestDto'
+      responses:
+        "201":
+          description: Hotel created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShortHotelInfoResponseDto'
+          headers:
+            Location:
+              description: URI of the created hotel resource
+              schema:
+                type: string
+              example: "/hotels/123e4567-e89b-12d3-a456-426614174000"
+
+  /hotels/{id}:
+    get:
+      summary: Get hotel by ID
+      description: Retrieves detailed information about a specific hotel by its ID.
+      tags:
+        - Hotels
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Unique identifier of the hotel
+          schema:
+            type: string
+            format: uuid
+          example: "123e4567-e89b-12d3-a456-426614174000"
+      responses:
+        "200":
+          description: Hotel retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FullHotelInfoResponseDto'
+
+  /search:
+    get:
+      summary: Search hotels
+      description: Searches hotels based on various filters such as name, brand, city, country, and amenities.
+      tags:
+        - Search
+      parameters:
+        - name: name
+          in: query
+          required: false
+          description: Name of the hotel
+          schema:
+            type: string
+        - name: brand
+          in: query
+          required: false
+          description: Brand of the hotel
+          schema:
+            type: string
+        - name: city
+          in: query
+          required: false
+          description: City where the hotel is located
+          schema:
+            type: string
+        - name: country
+          in: query
+          required: false
+          description: Country where the hotel is located
+          schema:
+            type: string
+        - name: amenities
+          in: query
+          required: false
+          description: List of amenities
+          schema:
+            type: array
+            items:
+              type: string
+        - name: pageable
+          in: query
+          required: false
+          description: Pagination and sorting information
+          schema:
+            type: string
+          example: "{ \"page\": 0, \"size\": 10, \"sort\": \"name,asc\" }"
+      responses:
+        "200":
+          description: Hotels retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ShortHotelInfoResponseDto'
+
+  /histogram/{param}:
+    get:
+      summary: Get hotel count grouped by parameter
+      description: Retrieves a histogram of hotel counts grouped by a specific parameter.
+      tags:
+        - Analytics
+      parameters:
+        - name: param
+          in: path
+          required: true
+          description: Parameter to group by (e.g., city, country, brand)
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Histogram retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: integer
+
+  /hotels/{id}/amenities:
+    post:
+      summary: Add amenities to a hotel
+      description: Adds a list of amenities to a specific hotel.
+      tags:
+        - Hotels
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Unique identifier of the hotel
+          schema:
+            type: string
+            format: uuid
+          example: "123e4567-e89b-12d3-a456-426614174000"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+      responses:
+        "201":
+          description: Amenities added successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FullHotelInfoResponseDto'
+          headers:
+            Location:
+              description: URI of the hotel resource with amenities
+              schema:
+                type: string
+              example: "/hotels/123e4567-e89b-12d3-a456-426614174000/amenities"
+
+components:
+  schemas:
+    ShortHotelInfoResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        brand:
+          type: string
+        city:
+          type: string
+        country:
+          type: string
+
+    FullHotelInfoResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        brand:
+          type: string
+        city:
+          type: string
+        country:
+          type: string
+        amenities:
+          type: array
+          items:
+            type: string
+
+    CreateHotelRequestDto:
+      type: object
+      properties:
+        name:
+          type: string
+        brand:
+          type: string
+        city:
+          type: string
+        country:
+          type: string
+
+    HotelSearchRequestDto:
+      type: object
+      properties:
+        name:
+          type: string
+        brand:
+          type: string
+        city:
+          type: string
+        country:
+          type: string
+        amenities:
+          type: array
+          items:
+            type: string
