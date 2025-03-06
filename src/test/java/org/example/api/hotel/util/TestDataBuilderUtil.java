@@ -6,7 +6,6 @@ import org.example.api.hotel.dto.request.AddressRequestDto;
 import org.example.api.hotel.dto.request.ArrivalTimeRequestDto;
 import org.example.api.hotel.dto.request.ContactRequestDto;
 import org.example.api.hotel.dto.request.CreateHotelRequestDto;
-import org.example.api.hotel.dto.request.HotelSearchRequestDto;
 import org.example.api.hotel.dto.response.AddressResponseDto;
 import org.example.api.hotel.dto.response.ArrivalTimeResponseDto;
 import org.example.api.hotel.dto.response.ContactResponseDto;
@@ -192,25 +191,9 @@ public class TestDataBuilderUtil {
         );
     }
 
-    public static HotelSearchRequestDto generateHotelSearchRequest() {
-        return HotelSearchRequestDto.builder()
-                .name(faker.company().name())
-                .brand(faker.company().industry())
-                .city(faker.address().city())
-                .country(faker.address().country())
-                .amenities(List.of("WiFi", "Gym", "Spa"))
-                .build();
-    }
-
     public static List<String> generateBrands() {
         return IntStream.range(0, 5)
                 .mapToObj(i -> faker.company().name())
-                .toList();
-    }
-
-    public static List<Hotel> generateHotels(int count) {
-        return IntStream.range(0, count)
-                .mapToObj(i -> generateHotel())
                 .toList();
     }
 

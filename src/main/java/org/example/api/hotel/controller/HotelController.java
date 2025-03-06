@@ -4,7 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.api.hotel.dto.request.CreateHotelRequestDto;
-import org.example.api.hotel.dto.request.HotelSearchRequestDto;
+import org.example.api.hotel.dto.request.SearchHotelRequestDto;
 import org.example.api.hotel.dto.response.FullHotelInfoResponseDto;
 import org.example.api.hotel.dto.response.ShortHotelInfoResponseDto;
 import org.example.api.hotel.model.enums.HotelGroupingParameter;
@@ -112,9 +112,9 @@ public class HotelController {
         return response;
     }
 
-    private HotelSearchRequestDto buildHotelSearchRequestDto(String name, String brand, String city, String country,
+    private SearchHotelRequestDto buildHotelSearchRequestDto(String name, String brand, String city, String country,
                                                              List<String> amenities) {
-        return HotelSearchRequestDto.builder()
+        return SearchHotelRequestDto.builder()
                 .name(name)
                 .brand(brand)
                 .city(city)

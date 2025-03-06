@@ -2,8 +2,8 @@ package org.example.api.hotel.service.Impl;
 
 import lombok.RequiredArgsConstructor;
 import org.example.api.hotel.dto.request.CreateHotelRequestDto;
-import org.example.api.hotel.dto.request.HotelFilterRequestDto;
-import org.example.api.hotel.dto.request.HotelSearchRequestDto;
+import org.example.api.hotel.dto.request.FilterHotelRequestDto;
+import org.example.api.hotel.dto.request.SearchHotelRequestDto;
 import org.example.api.hotel.dto.response.FullHotelInfoResponseDto;
 import org.example.api.hotel.dto.response.ShortHotelInfoResponseDto;
 import org.example.api.hotel.exception.EntityHotelNotFoundException;
@@ -70,7 +70,7 @@ public class HotelServiceImpl implements HotelService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<ShortHotelInfoResponseDto> searchHotels(HotelSearchRequestDto request, Pageable pageable) {
+    public Page<ShortHotelInfoResponseDto> searchHotels(SearchHotelRequestDto request, Pageable pageable) {
         var filter = buildHotelFilterRequestDto(request.getName(), request.getBrand(), request.getCity(),
                 request.getCountry());
         var hotels = getHotels(filter, request.getAmenities(), pageable);
@@ -102,8 +102,8 @@ public class HotelServiceImpl implements HotelService {
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
     }
 
-    private HotelFilterRequestDto buildHotelFilterRequestDto(String name, String brand, String city, String country) {
-        return HotelFilterRequestDto.builder()
+    private FilterHotelRequestDto buildHotelFilterRequestDto(String name, String brand, String city, String country) {
+        return FilterHotelRequestDto.builder()
                 .name(name)
                 .brand(brand)
                 .city(city)
@@ -111,7 +111,7 @@ public class HotelServiceImpl implements HotelService {
                 .build();
     }
 
-    private Page<Hotel> getHotels(HotelFilterRequestDto filter, List<String> amenities, Pageable pageable) {
+    private Page<Hotel> getHotels(FilterHotelRequestDto filter, List<String> amenities, Pageable pageable) {
         var specification = HotelSpecification.filterBy(filter);
 
         if (amenities == null || amenities.isEmpty()) {

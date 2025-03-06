@@ -5,7 +5,7 @@ import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.experimental.UtilityClass;
-import org.example.api.hotel.dto.request.HotelFilterRequestDto;
+import org.example.api.hotel.dto.request.FilterHotelRequestDto;
 import org.example.api.hotel.model.Hotel;
 import org.example.api.hotel.util.HotelApiConstantUtil;
 import org.springframework.data.jpa.domain.Specification;
@@ -16,7 +16,7 @@ import java.util.function.Function;
 
 @UtilityClass
 public class HotelSpecification {
-    public static Specification<Hotel> filterBy(HotelFilterRequestDto filter) {
+    public static Specification<Hotel> filterBy(FilterHotelRequestDto filter) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 

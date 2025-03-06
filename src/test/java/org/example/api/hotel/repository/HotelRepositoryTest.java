@@ -1,6 +1,6 @@
 package org.example.api.hotel.repository;
 
-import org.example.api.hotel.dto.request.HotelFilterRequestDto;
+import org.example.api.hotel.dto.request.FilterHotelRequestDto;
 import org.example.api.hotel.model.Hotel;
 import org.example.api.hotel.repository.specification.HotelSpecification;
 import org.example.api.hotel.util.TestDataBuilderUtil;
@@ -86,8 +86,8 @@ public class HotelRepositoryTest {
         assertThat(hotels.getContent()).containsExactly(hotel);
     }
 
-    private HotelFilterRequestDto builderHotelFilterRequestDto(String name, String brand, String city, String country) {
-        return HotelFilterRequestDto.builder()
+    private FilterHotelRequestDto builderHotelFilterRequestDto(String name, String brand, String city, String country) {
+        return FilterHotelRequestDto.builder()
                 .name(name)
                 .brand(brand)
                 .city(city)

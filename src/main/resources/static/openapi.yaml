@@ -206,11 +206,11 @@ components:
           format: uuid
         name:
           type: string
-        brand:
+        description:
           type: string
-        city:
+        address:
           type: string
-        country:
+        phone:
           type: string
 
     FullHotelInfoResponseDto:
@@ -221,12 +221,16 @@ components:
           format: uuid
         name:
           type: string
+        description:
+          type: string
         brand:
           type: string
-        city:
-          type: string
-        country:
-          type: string
+        address:
+          $ref: '#/components/schemas/AddressResponseDto'
+        contacts:
+          $ref: '#/components/schemas/ContactResponseDto'
+        arrivalTime:
+          $ref: '#/components/schemas/ArrivalTimeResponseDto'
         amenities:
           type: array
           items:
@@ -237,25 +241,120 @@ components:
       properties:
         name:
           type: string
+          maxLength: 255
+        description:
+          type: string
+          maxLength: 500
         brand:
           type: string
-        city:
-          type: string
-        country:
-          type: string
+          maxLength: 100
+        address:
+          $ref: '#/components/schemas/AddressRequestDto'
+        contacts:
+          $ref: '#/components/schemas/ContactRequestDto'
+        arrivalTime:
+          $ref: '#/components/schemas/ArrivalTimeRequestDto'
+      required:
+        - name
+        - brand
+        - address
+        - contacts
+        - arrivalTime
 
-    HotelSearchRequestDto:
+    SearchHotelRequestDto:
       type: object
       properties:
         name:
           type: string
+          maxLength: 255
         brand:
+          type: string
+          maxLength: 100
+        city:
+          type: string
+          maxLength: 163
+        country:
+          type: string
+          maxLength: 56
+        amenities:
+          type: array
+          items:
+            type: string
+
+    AddressRequestDto:
+      type: object
+      properties:
+        houseNumber:
+          type: integer
+        street:
+          type: string
+          maxLength: 85
+        city:
+          type: string
+          maxLength: 163
+        country:
+          type: string
+          maxLength: 56
+        postCode:
+          type: string
+          pattern: "\\d{4,10}"
+      required:
+        - houseNumber
+        - street
+        - city
+        - country
+        - postCode
+
+    AddressResponseDto:
+      type: object
+      properties:
+        houseNumber:
+          type: integer
+        street:
           type: string
         city:
           type: string
         country:
           type: string
-        amenities:
-          type: array
-          items:
-            type: string
+        postCode:
+          type: string
+
+    ContactRequestDto:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+          pattern: "^\\+?[0-9. ()-]{10,18}$"
+      required:
+        - email
+        - phone
+
+    ContactResponseDto:
+      type: object
+      properties:
+        email:
+          type: string
+        phone:
+          type: string
+
+    ArrivalTimeRequestDto:
+      type: object
+      properties:
+        checkIn:
+          type: string
+        checkOut:
+          type: string
+      required:
+        - checkIn
+        - checkOut
+
+    ArrivalTimeResponseDto:
+      type: object
+      properties:
+        checkIn:
+          type: string
+        checkOut:
+          type: string

@@ -1,18 +1,12 @@
 package org.example.api.hotel.dto.request;
 
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
-import java.util.List;
-
-@Data
+@Getter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class HotelSearchRequestDto {
+public class FilterHotelRequestDto {
 
     @Size(max = 255)
     private String name;
@@ -25,6 +19,4 @@ public class HotelSearchRequestDto {
 
     @Size(max = 56)
     private String country;
-
-    private List<String> amenities;
 }
